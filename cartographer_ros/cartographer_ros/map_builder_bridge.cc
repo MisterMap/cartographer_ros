@@ -28,6 +28,7 @@ namespace cartographer_ros {
 namespace {
 
 using ::cartographer::transform::Rigid3d;
+using ::cartographer::transform::Rigid2d;
 
 constexpr double kTrajectoryLineStripMarkerScale = 0.07;
 constexpr double kLandmarkMarkerScale = 0.2;
@@ -510,4 +511,14 @@ void MapBuilderBridge::OnLocalSlamResult(
   local_slam_data_[trajectory_id] = std::move(local_slam_data);
 }
 
+void MapBuilderBridge::SetGlobalLandmarks(std::string& id, double& x,
+                                          double& y) {
+  map_builder_->pose_graph()->SetLandmarkPose(
+      id, Rigid3d(Rigid3d::Translation(Eigen::Vector3d(x, y, 0))), true);
+}
+
+void MapBuilderBridge::SetStartPosition(double& x, double& y, double& a) {
+  map_builder_->pose_graph()->StartPosition =
+      Rigid2d(Eigen::Vector2d(x, y), a);
+}
 }  // namespace cartographer_ros

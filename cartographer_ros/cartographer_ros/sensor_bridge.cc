@@ -51,8 +51,12 @@ SensorBridge::SensorBridge(
 std::unique_ptr<carto::sensor::OdometryData> SensorBridge::ToOdometryData(
     const nav_msgs::Odometry::ConstPtr& msg) {
   const carto::common::Time time = FromRos(msg->header.stamp);
+  // std::cout << " odometry time "
+  //           << std::setprecision(15) << ToRos(time).toSec() << std::endl;
   const auto sensor_to_tracking = tf_bridge_.LookupToTracking(
       time, CheckNoLeadingSlash(msg->child_frame_id));
+  // std::cout << sensor_to_tracking.translation().x << std::endl;
+
   if (sensor_to_tracking == nullptr) {
     return nullptr;
   }
@@ -158,6 +162,7 @@ void SensorBridge::HandleLaserScanMessage(
   carto::sensor::PointCloudWithIntensities point_cloud;
   carto::common::Time time;
   std::tie(point_cloud, time) = ToPointCloudWithIntensities(*msg);
+  // std::cout << "Scan " << std::setprecision(15) << msg->header.stamp.toSec() << std::endl;
   HandleLaserScan(sensor_id, time, msg->header.frame_id, point_cloud);
 }
 

@@ -173,6 +173,7 @@ class Node {
   cartographer_ros_msgs::StatusResponse FinishTrajectoryUnderLock(
       int trajectory_id) EXCLUSIVE_LOCKS_REQUIRED(mutex_);
   void MaybeWarnAboutTopicMismatch(const ::ros::WallTimerEvent&);
+  void LoadGlobalBeaconsCoords(const std::string& file_name);
 
   const NodeOptions node_options_;
 

@@ -13,13 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 #include "cartographer_ros/node.h"
 
 #include <chrono>
 #include <string>
 #include <vector>
 
+#include <fstream>
 #include "Eigen/Core"
 #include "absl/memory/memory.h"
 #include "cartographer/common/configuration_file_resolver.h"
@@ -94,6 +94,19 @@ Node::Node(
     : node_options_(node_options),
       map_builder_bridge_(node_options_, std::move(map_builder), tf_buffer) {
   absl::MutexLock lock(&mutex_);
+
+  std::string global_beacons_file;
+  node_handle_.getParam("global_beacons", global_beacons_file);
+  std::cout << global_beacons_file << std::endl;
+  LoadGlobalBeaconsCoords(global_beacons_file);
+
+  double x, y, a;
+  node_handle_.getParam("start_x", x);
+  node_handle_.getParam("start_y", y);
+  node_handle_.getParam("start_angle", a);
+
+  map_builder_bridge_.SetStartPosition(x, y, a);
+
   if (collect_metrics) {
     metrics_registry_ = absl::make_unique<metrics::FamilyFactory>();
     carto::metrics::RegisterAllMetrics(metrics_registry_.get());
@@ -147,7 +160,19 @@ Node::Node(
       &Node::PublishConstraintList, this));
 }
 
-Node::~Node() { FinishAllTrajectories(); }
+void Node::LoadGlobalBeaconsCoords(const std::string& file_name) {
+  std::ifstream infile(file_name);
+  std::string name;
+  double x;
+  double y;
+  while (infile >> name >> x >> y) {
+    map_builder_bridge_.SetGlobalLandmarks(name, x, y);
+  }
+}
+
+Node::~Node() {
+  FinishAllTrajectories();
+}
 
 ::ros::NodeHandle* Node::node_handle() { return &node_handle_; }
 

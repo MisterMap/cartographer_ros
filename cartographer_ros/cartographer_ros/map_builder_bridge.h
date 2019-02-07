@@ -97,6 +97,8 @@ class MapBuilderBridge {
 
   SensorBridge* sensor_bridge(int trajectory_id);
 
+  void SetGlobalLandmarks(std::string& id, double& x, double& y);
+  void SetStartPosition(double& x, double& y, double& a);
  private:
   void OnLocalSlamResult(const int trajectory_id,
                          const ::cartographer::common::Time time,

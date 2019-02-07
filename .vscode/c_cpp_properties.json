@@ -1,0 +1,28 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/opt/ros/kinetic/include",
+                "~/cartographer_catkin_ws/install_isolated/**",
+                "~/cartographer_catkin_ws/build_isolated/**",
+                "/usr/local/include/",
+                "/usr/include/",
+                "/usr/include/eigen3",
+                "/usr/include/lua5.2",
+                "/usr/include/pcl-1.7",
+                "/usr/include/yaml-cpp"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE"
+            ],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
